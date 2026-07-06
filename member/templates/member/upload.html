@@ -2,16 +2,51 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>csv-upload</title>
+    <title>CSVアップロード</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 40px; color: #333; }
+        .upload-section { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-bottom: 30px; }
+        table { border-collapse: collapse; width: 100%; max-width: 500px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        th, td { border: 1px solid #dee2e6; padding: 12px 15px; text-align: left; }
+        th { background-color: #28a745; color: white; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        .hint { color: #6c757d; font-size: 0.9em; margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <h2>CSVアップロード</h2>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="csv_file" accept=".csv" required>
-        <button type="submit">アップロードして集計</button>
-    </form>
+    <h2>🎸 BTL ライブ参加回答集計システム</h2>
+    
+    <div class="upload-section">
+        <h3>1. CSVファイルのアップロード</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" required>
+            <button type="submit" style="padding: 6px 12px; cursor: pointer;">アップロードして集計</button>
+        </form>
+    </div>
+
+    {% if member_list %}
+        <h3>2. 出演者名簿（あいうえお順・表記ゆれ確認用）</h3>
+        <p class="hint">💡 下の表をドラッグしてスプレッドシートにコピペ可能です！</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>氏名（スペースなし）</th>
+                    <th style="width: 150px;">出演バンド数</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in member_list %}
+                    <tr>
+                        <td>{{ member.name }}</td>
+                        <td><strong>{{ member.count }}</strong> バンド</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
 </body>
 </html>
